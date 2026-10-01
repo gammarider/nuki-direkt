@@ -22,6 +22,12 @@ After a confirmed completed motor command, the first state read or challenge
 request uses a fresh connection. It adds no motor-command retries, does not
 shorten global timeouts, and leaves event-log retrieval enabled.
 
+Version 0.0.23 also rejects partially initialized BLE connections. Both
+notification subscriptions must succeed before a connection can be reused.
+Setup failures (including EOF and cancellation) trigger bounded disconnect
+cleanup; failed cleanup prevents reuse rather than permitting command writes.
+This does not change pairing data or add motor-command retries.
+
 This is an experimental workaround, not a guarantee against RF interference,
 proxy congestion or lock firmware issues. It has been tested with Smart Locks
 and Bluetooth proxies; other device types, including Openers, have not been

@@ -218,12 +218,12 @@ class Tests(unittest.IsolatedAsyncioTestCase):
         d._const = types.SimpleNamespace(BLE_PAIRING_CHAR='pair', BLE_CHAR='data')
         d._safe_start_notify = AsyncMock()
         d._notification_handler = object()
-        client = types.SimpleNamespace(is_connected=True)
+        client = types.SimpleNamespace(is_connected=True, start_notify=AsyncMock())
         establish = AsyncMock(return_value=client)
         ns['establish_connection'] = establish
         await d.connect()
         self.assertEqual(establish.call_args.kwargs['disconnected_callback'], d._on_status_disconnect)
-        self.assertEqual(d._safe_start_notify.await_count, 2)
+        self.assertEqual(client.start_notify.await_count, 2)
         await d.connect()
         self.assertEqual(establish.await_count, 1)
 
