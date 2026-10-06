@@ -16,7 +16,7 @@ body:
   attributes:
     label: Checklist
     options:
-      - label: I have enabled debug logging for my installation.
+      - label: I have checked that attachments contain no PINs, pairing keys, tokens or backups.
         required: true
       - label: I have filled out the issue template to the best of my ability.
         required: true
@@ -32,8 +32,8 @@ body:
     required: true
 - type: textarea
   attributes:
-    label: "hass_nuki_bt version"
-    description: "The version of hass_nuki_bt installed on your machine."
+    label: "Nuki Direkt version"
+    description: "The version of Nuki Direkt installed on your machine."
   validations:
     required: true
 - type: textarea
@@ -56,7 +56,7 @@ body:
 - type: textarea
   attributes:
     label: "Debug logs"
-    description: "To enable debug logs check this https://www.home-assistant.io/integrations/logger/, this **needs** to include _everything_ from startup of Home Assistant to the point where you encounter the issue."
+    description: "Include the relevant error and surrounding context. Remove PINs, pairing keys, tokens and personal data before posting. Do not attach complete backups."
     render: text
   validations:
     required: true

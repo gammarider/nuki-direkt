@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock, patch
 import test_upstream as baseline
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-source = (ROOT / 'custom_components/hass_nuki_bt/status_reconnect.py').read_text()
+source = (ROOT / 'custom_components/nuki_direkt/status_reconnect.py').read_text()
 tree = ast.parse(source)
 tree.body = [n for n in tree.body if not isinstance(n, (ast.Import, ast.ImportFrom))]
 ns = dict(NukiDevice=baseline.namespace['OriginalMethods'], asyncio=asyncio,

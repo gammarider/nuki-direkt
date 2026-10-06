@@ -3,7 +3,7 @@ update_nuki_time:
     entity:
       domain: lock
       # Keep in sync with const.DOMAIN.
-      integration: hass_nuki_bt
+      integration: nuki_direkt
   fields:
     time:
       required: false

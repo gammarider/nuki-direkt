@@ -1,5 +1,5 @@
 {
-    "name": "hass_nuki_bt",
+    "name": "nuki_direkt",
     "build": {
         "dockerfile": "Dockerfile"
     }

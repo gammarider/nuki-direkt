@@ -1,4 +1,4 @@
-"""Button platform for hass_nuki_bt."""
+"""Button platform for nuki_direkt."""
 from dataclasses import dataclass
 from collections.abc import Callable
 import logging

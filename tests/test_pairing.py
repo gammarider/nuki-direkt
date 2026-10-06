@@ -13,13 +13,13 @@ from nacl.public import PrivateKey
 from pyNukiBT import NukiConst, NukiErrorException
 from pyNukiBT.const import NukiLockConst
 
-from custom_components.hass_nuki_bt import config_flow as flow_module
-from custom_components.hass_nuki_bt.config_flow import NukiFlowHandler, normalize_pin, validate_credentials
-from custom_components.hass_nuki_bt.const import (
+from custom_components.nuki_direkt import config_flow as flow_module
+from custom_components.nuki_direkt.config_flow import NukiFlowHandler, normalize_pin, validate_credentials
+from custom_components.nuki_direkt.const import (
     DOMAIN, CONF_DEVICE_ADDRESS, CONF_CLIENT_TYPE,
     CONF_AUTH_ID, CONF_PRIVATE_KEY, CONF_PUBLIC_KEY, CONF_DEVICE_PUBLIC_KEY, CONF_APP_ID,
 )
-from custom_components.hass_nuki_bt.pairing import PairingNukiDevice
+from custom_components.nuki_direkt.pairing import PairingNukiDevice
 
 ADDRESS = 'AA:BB:CC:DD:EE:FF'
 INPUT = {CONF_NAME: 'Test lock', CONF_DEVICE_ADDRESS: ADDRESS, CONF_CLIENT_TYPE: 'App'}
@@ -221,6 +221,15 @@ class PairingTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['reason'], 'already_configured')
         self.device.connect.assert_not_called()
 
+    async def test_previous_domain_requires_migration_instead_of_pairing(self):
+        entry = ConfigEntry(domain="hass_nuki_bt", data=INPUT, title='existing', version=1,
+            minor_version=1, source='user', unique_id=None, options={},
+            discovery_keys=MappingProxyType({}), subentries_data=[])
+        self.hass.config_entries._entries[entry.entry_id] = entry
+        result = await self.manager.async_init(DOMAIN, context={'source':'user'}, data=INPUT)
+        self.assertEqual(result['reason'], 'migration_required')
+        self.device.pair.assert_not_called()
+
     async def test_invalid_address_and_pin_remain_in_form(self):
         result = await self.flow.async_step_user({**INPUT, CONF_DEVICE_ADDRESS:'bad', CONF_PIN:'not-a-pin'})
         self.assertEqual(result['errors'], {CONF_DEVICE_ADDRESS:'invalid_address', CONF_PIN:'invalid_pin'})
@@ -305,7 +314,7 @@ class TransportTests(unittest.IsolatedAsyncioTestCase):
             {'nonce': b'n'*32}, {'auth_id': b'i'*4, 'nonce': b'n'*32},
             TimeoutError(),
         ]
-        with patch('custom_components.hass_nuki_bt.status_reconnect.StatusReconnectNukiDevice._send_command', AsyncMock(side_effect=responses)):
+        with patch('custom_components.nuki_direkt.status_reconnect.StatusReconnectNukiDevice._send_command', AsyncMock(side_effect=responses)):
             with self.assertRaises(TimeoutError):
                 await device.pair()
         self.assertTrue(device.authorization_started)
@@ -348,6 +357,6 @@ class TransportTests(unittest.IsolatedAsyncioTestCase):
         async def wait():
             await asyncio.Event().wait()
         device._client.disconnect = wait
-        with patch('custom_components.hass_nuki_bt.pairing.CLEANUP_TIMEOUT', .01):
+        with patch('custom_components.nuki_direkt.pairing.CLEANUP_TIMEOUT', .01):
             with self.assertRaises(TimeoutError):
                 await device.disconnect()

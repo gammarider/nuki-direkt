@@ -19,6 +19,8 @@ Das Projekt steht in keiner Verbindung zum Hersteller Nuki.
 
 ## Installation
 
+Bei einer vorhandenen Installation zuerst den Abschnitt zum Update auf 0.1.0 lesen.
+
 1. In HACS das Menü **Benutzerdefinierte Repositories** öffnen.
 2. `https://github.com/gammarider/nuki-direkt` mit Typ **Integration** hinzufügen.
 3. **Nuki Direkt** herunterladen und Home Assistant neu starten.
@@ -53,38 +55,17 @@ er führt keine Bluetooth-Verbindungsprüfung aus. Die neuen Abläufe sind mit
 Home Assistants Flow-Manager und simulierten Transportfehlern getestet. Eine
 neue physische Erstkopplung ist noch separat zu erproben.
 
-## Bereits mit Nuki BT verbunden?
+## Update auf 0.1.0: einmaliger Umzug
 
-**Bestehende Schlösser nicht löschen oder erneut koppeln.** Nuki Direkt verwendet
-weiterhin die technische Kennung `hass_nuki_bt`. Kopplungsdaten, Config Entries,
-Unique-IDs und Entitäten behalten ihr bisheriges Format.
+**Ab 0.1.0 lautet die technische Kennung `nuki_direkt`.** Auch Komponentenordner
+und Installationsarchiv verwenden diesen Namen. Bestehende Installationen mit
+der alten Kennung benötigen den [einmaligen Umzug](docs/migration.md), bevor
+Home Assistant mit dem neuen Code startet. Ein HACS-Download allein überträgt
+keine vorhandenen Geräteeinträge.
 
-### Bisherige eigene Versionen 0.0.21–0.0.23
-
-Das eigene Repository hieß bisher `gammarider/hass_nuki_bt`, davor
-`evgparen/hass_nuki_bt`. Es wird unter **Nuki Direkt** weitergeführt.
-
-1. Ein geschütztes Home-Assistant-Backup einschließlich Konfiguration anlegen.
-2. HACS aktualisieren und prüfen, ob das bestehende Repository bereits auf
-   `gammarider/nuki-direkt` zeigt. Falls es noch den alten Namen zeigt, zunächst
-   den Repository-Link prüfen und die HACS-Informationen neu laden.
-3. Die aktuelle Version installieren und Home Assistant neu starten.
-4. Schlossstatus, vorhandene Entitäten und Automationen prüfen.
-
-Nur **eine** HACS-Quelle darf `custom_components/hass_nuki_bt` verwalten. Keine
-zweite Installation parallel zur bereits vorhandenen Quelle hinzufügen.
-
-### Wechsel vom Originalprojekt
-
-1. Geschütztes Backup einschließlich `.storage` und Komponenten-Code anlegen.
-2. Nur den bisherigen **Repository-Download in HACS** entfernen, nicht die
-   konfigurierten Geräte unter **Geräte & Dienste** und keine Schlossfreigaben.
-3. Nuki Direkt als benutzerdefiniertes HACS-Repository hinzufügen und installieren.
-4. Erst nach vollständiger Installation Home Assistant neu starten.
-
-Bei einem fehlgeschlagenen Download zunächst den alten Code wiederherstellen.
-Ein Rückweg ersetzt nur Komponenten-Code und HACS-Quelle; keine vollständige
-alte HA-Konfiguration über neuere Änderungen zurückspielen.
+Der Umzug übernimmt Kopplungsdaten, Geräteeinträge und Entitäten. Es ist kein
+neues Anlernen nötig. **Vorhandene Geräte nicht löschen oder erneut koppeln.**
+Nach dem Umzug darf nur die neue Komponente installiert bleiben.
 
 ## Bluetooth-Verbindung
 
@@ -102,8 +83,8 @@ wiederholt**, keine globalen Timeouts verkürzt und keine Ereignisprotokolle
 abgeschaltet. Funkstörungen oder ausgelastete Bluetooth-Proxys können weiterhin
 Verzögerungen verursachen.
 
-**0.0.24 ändert Name, Projektverweise und Dokumentation; die Verbindungslogik
-entspricht 0.0.23.** `pyNukiBT==0.0.20` bleibt bewusst festgelegt.
+Seit 0.0.25 ist der Kopplungsassistent überarbeitet; 0.1.0 vereinheitlicht die
+technische Kennung. `pyNukiBT==0.0.20` bleibt bewusst festgelegt.
 
 ## Entwicklung
 
@@ -117,8 +98,7 @@ python -m unittest discover -s tests -v
 Die Tests verwenden auch Home Assistants echten Flow-Manager, simulieren die
 Bluetooth-Antworten und betätigen keine echten Schlösser.
 Die Release-Prüfungen umfassen Tests, Ruff, Hassfest und HACS. Versionsnummer
-und Release-Tag müssen übereinstimmen. Das HACS-Archiv heißt aus
-Kompatibilitätsgründen weiterhin `hass_nuki_bt.zip`.
+und Release-Tag müssen übereinstimmen. Das HACS-Archiv heißt `nuki_direkt.zip`.
 
 Änderungen an der festgelegten pyNukiBT-Version erfordern eine erneute Prüfung
 der Verbindungslogik. Fehler bitte in den

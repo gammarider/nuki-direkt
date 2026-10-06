@@ -1,4 +1,4 @@
-"""Sensor platform for hass_nuki_bt."""
+"""Sensor platform for nuki_direkt."""
 from __future__ import annotations
 from dataclasses import dataclass
 from collections.abc import Callable

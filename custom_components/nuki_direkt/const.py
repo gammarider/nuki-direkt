@@ -1,11 +1,11 @@
-"""Constants for hass_nuki_bt."""
+"""Constants for nuki_direkt."""
 from logging import Logger, getLogger
 
 LOGGER: Logger = getLogger(__package__)
 
 NAME = "Nuki Direkt"
 # Keep in sync with services.yaml.
-DOMAIN = "hass_nuki_bt"
+DOMAIN = "nuki_direkt"
 MANUFACTURER = "nuki"
 VERSION = "0.0.0"
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"

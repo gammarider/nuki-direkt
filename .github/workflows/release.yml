@@ -27,17 +27,20 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          manifest = json.loads(Path("custom_components/hass_nuki_bt/manifest.json").read_text())
+          manifest = json.loads(Path("custom_components/nuki_direkt/manifest.json").read_text())
           assert manifest["version"] == os.environ["RELEASE_TAG"].removeprefix("v")
           PY
 
       - name: "ZIP the integration directory"
         shell: "bash"
         run: |
-          cd "${{ github.workspace }}/custom_components/hass_nuki_bt"
-          zip hass_nuki_bt.zip -r ./ -x '*/__pycache__/*' '*.pyc'
+          cd "${{ github.workspace }}/custom_components/nuki_direkt"
+          zip nuki_direkt.zip -r ./ -x '*/__pycache__/*' '*.pyc'
 
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v3.0.1
         with:
-          files: ${{ github.workspace }}/custom_components/hass_nuki_bt/hass_nuki_bt.zip
+          files: |
+            ${{ github.workspace }}/custom_components/nuki_direkt/nuki_direkt.zip
+            ${{ github.workspace }}/tools/migrate_nuki_direkt.py
+            ${{ github.workspace }}/docs/migration.md

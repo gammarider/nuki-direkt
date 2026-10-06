@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock
 import voluptuous as vol
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPONENT = ROOT / "custom_components/hass_nuki_bt"
+COMPONENT = ROOT / "custom_components/nuki_direkt"
 CONSTANTS_SPEC = importlib.util.spec_from_file_location("nuki_constants", COMPONENT / "const.py")
 CONSTANTS = importlib.util.module_from_spec(CONSTANTS_SPEC)
 CONSTANTS_SPEC.loader.exec_module(CONSTANTS)
@@ -84,18 +84,18 @@ class Tests(unittest.IsolatedAsyncioTestCase):
 
     async def test_unload_releases_connection_only_after_platform_success(self):
         for success in [True, False]:
-            ns = dict(DOMAIN="hass_nuki_bt", PLATFORMS=[], BleakError=RuntimeError, _LOGGER=logging.getLogger(__name__))
+            ns = dict(DOMAIN="nuki_direkt", PLATFORMS=[], BleakError=RuntimeError, _LOGGER=logging.getLogger(__name__))
             unload = compiled_node(COMPONENT / "__init__.py", "async_unload_entry", ns)
             device = SimpleNamespace(disconnect=AsyncMock())
             hass = SimpleNamespace(config_entries=SimpleNamespace(async_unload_platforms=AsyncMock(return_value=success)),
-                                   data={"hass_nuki_bt": {"synthetic": SimpleNamespace(device=device)}})
+                                   data={"nuki_direkt": {"synthetic": SimpleNamespace(device=device)}})
             self.assertEqual(await unload(hass, SimpleNamespace(entry_id="synthetic")), success)
             self.assertEqual(device.disconnect.await_count, int(success))
-            self.assertEqual("synthetic" in hass.data["hass_nuki_bt"], not success)
+            self.assertEqual("synthetic" in hass.data["nuki_direkt"], not success)
 
     def test_manifest_keeps_domain_and_pinned_protocol(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["domain"], "hass_nuki_bt")
+        self.assertEqual(manifest["domain"], "nuki_direkt")
         self.assertEqual(manifest["requirements"], ["pyNukiBT==0.0.20"])
         tree = ast.parse((COMPONENT / "config_flow.py").read_text())
         cls = next(n for n in tree.body if getattr(n, "name", "") == "NukiFlowHandler")

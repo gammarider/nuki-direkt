@@ -1,5 +1,5 @@
 {
-  "domain": "hass_nuki_bt",
+  "domain": "nuki_direkt",
   "name": "Nuki Direkt",
   "bluetooth": [
     {
@@ -22,5 +22,5 @@
   "requirements": [
     "pyNukiBT==0.0.20"
   ],
-  "version": "0.0.25"
+  "version": "0.1.0"
 }

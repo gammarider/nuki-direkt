@@ -72,7 +72,8 @@
             "already_in_progress": "Setup for this lock is already in progress.",
             "pairing_cancelled": "Pairing cancelled. After a late cancellation, check the newly created authorization in the Nuki app.",
             "cleanup_failed": "The Bluetooth connection could not be released. Check the proxy before starting setup again.",
-            "pairing_uncertain": "The lock may have created an authorization whose confirmation was lost. Check the new HomeAssistant authorization in the Nuki app before starting another pairing attempt. Do not delete other devices' existing permissions."
+            "pairing_uncertain": "The lock may have created an authorization whose confirmation was lost. Check the new HomeAssistant authorization in the Nuki app before starting another pairing attempt. Do not delete other devices' existing permissions.",
+            "migration_required": "This lock already belongs to the previous integration. Complete the one-time migration described in the Nuki Direkt documentation; do not pair again."
         }
     },
     "options": {

@@ -1,6 +1,6 @@
 {
     "name": "Nuki Direkt",
-    "filename": "hass_nuki_bt.zip",
+    "filename": "nuki_direkt.zip",
     "hide_default_branch": true,
     "homeassistant": "2026.9.0",
     "render_readme": true,

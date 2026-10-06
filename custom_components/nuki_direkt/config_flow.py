@@ -12,6 +12,7 @@ from homeassistant import config_entries
 from homeassistant.components import bluetooth
 from homeassistant.const import CONF_NAME, CONF_PIN
 from homeassistant.core import callback
+from homeassistant.data_entry_flow import AbortFlow
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
 from pyNukiBT import NukiConst, NukiErrorException
 
@@ -52,6 +53,13 @@ class NukiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _async_claim_address(self):
         address = self._data[CONF_DEVICE_ADDRESS]
+        # A domain transition must import existing credentials, never pair twice.
+        if any(
+            str(entry.data.get(CONF_DEVICE_ADDRESS, "")).strip().upper() == address
+            for entry in self.hass.config_entries.async_entries("hass_nuki_bt")
+        ):
+            self._error = "migration_required"
+            raise AbortFlow("migration_required")
         # Older user-created entries may have no unique_id at all.
         if any(
             str(entry.data.get(CONF_DEVICE_ADDRESS, "")).strip().upper() == address

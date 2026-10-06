@@ -83,7 +83,8 @@
             "already_in_progress": "Für dieses Schloss läuft bereits eine Einrichtung.",
             "pairing_cancelled": "Die Kopplung wurde abgebrochen. Prüfe bei einem späten Abbruch die neu angelegte Berechtigung in der Nuki-App.",
             "cleanup_failed": "Die Bluetooth-Verbindung konnte nicht freigegeben werden. Bitte den Proxy prüfen und erst danach die Einrichtung neu starten.",
-            "pairing_uncertain": "Das Schloss könnte bereits eine Berechtigung angelegt haben, deren Bestätigung verloren ging. Bitte die neue HomeAssistant-Berechtigung in der Nuki-App prüfen, bevor du einen neuen Kopplungsversuch startest. Bestehende Berechtigungen anderer Geräte nicht löschen."
+            "pairing_uncertain": "Das Schloss könnte bereits eine Berechtigung angelegt haben, deren Bestätigung verloren ging. Bitte die neue HomeAssistant-Berechtigung in der Nuki-App prüfen, bevor du einen neuen Kopplungsversuch startest. Bestehende Berechtigungen anderer Geräte nicht löschen.",
+            "migration_required": "Dieses Schloss gehört noch zur bisherigen Integration. Führe den einmaligen Umzug aus der Nuki-Direkt-Anleitung aus; nicht erneut koppeln."
         }
     }
 }
