@@ -19,7 +19,7 @@ Das Projekt steht in keiner Verbindung zum Hersteller Nuki.
 
 ## Installation
 
-Bei einer vorhandenen Installation zuerst den Abschnitt zum Update auf 0.1.0 lesen.
+Bei einer vorhandenen Installation zuerst den Abschnitt zum Update auf 0.1.1 lesen.
 
 1. In HACS das Menü **Benutzerdefinierte Repositories** öffnen.
 2. `https://github.com/gammarider/nuki-direkt` mit Typ **Integration** hinzufügen.
@@ -55,9 +55,9 @@ er führt keine Bluetooth-Verbindungsprüfung aus. Die neuen Abläufe sind mit
 Home Assistants Flow-Manager und simulierten Transportfehlern getestet. Eine
 neue physische Erstkopplung ist noch separat zu erproben.
 
-## Update auf 0.1.0: einmaliger Umzug
+## Update auf 0.1.1: einmaliger Umzug
 
-**Ab 0.1.0 lautet die technische Kennung `nuki_direkt`.** Auch Komponentenordner
+**Ab 0.1.1 lautet die technische Kennung `nuki_direkt`.** Auch Komponentenordner
 und Installationsarchiv verwenden diesen Namen. Bestehende Installationen mit
 der alten Kennung benötigen den [einmaligen Umzug](docs/migration.md), bevor
 Home Assistant mit dem neuen Code startet. Ein HACS-Download allein überträgt
@@ -83,7 +83,7 @@ wiederholt**, keine globalen Timeouts verkürzt und keine Ereignisprotokolle
 abgeschaltet. Funkstörungen oder ausgelastete Bluetooth-Proxys können weiterhin
 Verzögerungen verursachen.
 
-Seit 0.0.25 ist der Kopplungsassistent überarbeitet; 0.1.0 vereinheitlicht die
+Seit 0.0.25 ist der Kopplungsassistent überarbeitet; 0.1.1 vereinheitlicht die
 technische Kennung. `pyNukiBT==0.0.20` bleibt bewusst festgelegt.
 
 ## Entwicklung

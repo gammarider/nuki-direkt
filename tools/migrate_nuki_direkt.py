@@ -14,6 +14,7 @@ import tempfile
 OLD = "hass_nuki_bt"
 NEW = "nuki_direkt"
 FILES = ("core.config_entries", "core.entity_registry", "core.device_registry")
+HACS_FILES = ("hacs.repositories", "hacs.data")
 
 
 def plan(documents):
@@ -58,6 +59,37 @@ def plan(documents):
     return result, {"entries": len(migrating), "entities": entity_count, "device_identifiers": device_count}
 
 
+def migrate_hacs(documents, version):
+    """Update only this repository's cached ownership after direct installation."""
+    count = 0
+    def visit(value):
+        nonlocal count
+        if isinstance(value, dict):
+            if value.get("full_name") == "gammarider/nuki-direkt":
+                if value.get("domain") not in (OLD, NEW):
+                    raise ValueError("Unexpected HACS repository domain")
+                expected = {"domain": NEW, "version_installed": version, "installed": True,
+                            "manifest_name": "Nuki Direkt"}
+                changed = any(value.get(k) != v for k, v in expected.items())
+                filename = value.setdefault("repository_manifest", {}).get("filename")
+                changed = changed or filename != "nuki_direkt.zip"
+                value.update(expected)
+                value["repository_manifest"]["filename"] = "nuki_direkt.zip"
+                if changed:
+                    value["installed_commit"] = None
+                    count += 1
+                return
+            for child in value.values():
+                visit(child)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child)
+    for name in HACS_FILES:
+        if name in documents:
+            visit(documents[name])
+    return count
+
+
 def assert_core_stopped(container):
     """Fail closed unless Docker confirms the named Core container is stopped."""
     output = subprocess.check_output(
@@ -90,13 +122,16 @@ def migrate(config, *, apply=False, container="homeassistant"):
     storage = config / ".storage"
     if apply:
         assert_core_stopped(container)
-        manifest = json.loads((config / "custom_components" / NEW / "manifest.json").read_text())
-        if manifest["domain"] != NEW:
-            raise ValueError("Install the new Nuki Direkt component before migration")
-    originals = {name: (storage / name).read_bytes() for name in FILES}
+    manifest_path = config / "custom_components" / NEW / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else None
+    if apply and (manifest is None or manifest.get("domain") != NEW):
+        raise ValueError("Install the new Nuki Direkt component before migration")
+    names = FILES + tuple(name for name in HACS_FILES if (storage / name).exists())
+    originals = {name: (storage / name).read_bytes() for name in names}
     documents = {name: json.loads(data) for name, data in originals.items()}
     result, counts = plan(documents)
-    changed = [name for name in FILES if result[name] != documents[name]]
+    counts["hacs_records"] = migrate_hacs(result, manifest["version"]) if manifest is not None else 0
+    changed = [name for name in names if result[name] != documents[name]]
     legacy = config / "custom_components" / OLD
     if not apply or (not changed and not legacy.exists()):
         return {**counts, "applied": False, "changed_files": len(changed)}
@@ -123,7 +158,7 @@ def migrate(config, *, apply=False, container="homeassistant"):
         if legacy.exists():
             shutil.move(str(legacy), str(backup / "previous_component"))
             moved = True
-        for name in FILES:
+        for name in names:
             if json.loads((storage / name).read_bytes()) != result[name]:
                 raise RuntimeError("Registry verification failed")
     except Exception:

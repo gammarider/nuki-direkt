@@ -89,7 +89,7 @@ class FileTests(unittest.TestCase):
             (self.root/'.storage'/name).write_text(json.dumps(data))
         new=self.root/'custom_components'/migration.NEW
         new.mkdir(parents=True)
-        (new/'manifest.json').write_text(json.dumps({'domain':migration.NEW}))
+        (new/'manifest.json').write_text(json.dumps({'domain':migration.NEW,'version':'0.1.1'}))
         old=self.root/'custom_components'/migration.OLD
         old.mkdir()
         (old/'previous.py').write_text('previous code')
@@ -127,6 +127,26 @@ class FileTests(unittest.TestCase):
         entry=json.loads((self.root/'.storage'/migration.FILES[0]).read_bytes())['data']['entries'][0]
         self.assertEqual(entry['data'],fixture()[migration.FILES[0]]['data']['entries'][0]['data'])
 
+    def test_hacs_caches_move_only_the_matching_repository(self):
+        target={'full_name':'gammarider/nuki-direkt','domain':migration.OLD,
+                'version_installed':'0.0.25','installed':True,
+                'repository_manifest':{'filename':'hass_nuki_bt.zip','zip_release':True}}
+        other={'full_name':'someone/other','domain':'other','version_installed':'2.0'}
+        for name in migration.HACS_FILES:
+            (self.root/'.storage'/name).write_text(json.dumps({'data':[target,other]}))
+        with patch.object(migration,'assert_core_stopped'):
+            result=migration.migrate(self.root,apply=True)
+            second=migration.migrate(self.root,apply=True)
+        self.assertEqual(result['hacs_records'],2)
+        self.assertFalse(second['applied'])
+        for name in migration.HACS_FILES:
+            records=json.loads((self.root/'.storage'/name).read_text())['data']
+            self.assertEqual(records[1],other)
+            self.assertEqual(records[0]['domain'],migration.NEW)
+            self.assertEqual(records[0]['version_installed'],'0.1.1')
+            self.assertEqual(records[0]['repository_manifest']['filename'],'nuki_direkt.zip')
+            self.assertTrue((Path(result['backup'])/name).exists())
+
     def test_mid_write_failure_rolls_back_completed_writes(self):
         real_write=migration.atomic_write
         calls=0
@@ -143,5 +163,5 @@ class FileTests(unittest.TestCase):
     def test_missing_new_component_refuses_writes(self):
         (self.root/'custom_components'/migration.NEW/'manifest.json').unlink()
         with patch.object(migration,'assert_core_stopped'):
-            with self.assertRaises(FileNotFoundError):migration.migrate(self.root,apply=True)
+            with self.assertRaises(ValueError):migration.migrate(self.root,apply=True)
         self.assertFalse((self.root/'nuki_direkt_backups').exists())

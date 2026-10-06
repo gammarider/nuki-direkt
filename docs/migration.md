@@ -1,6 +1,6 @@
-# Einmaliger Umzug zu Nuki Direkt 0.1.0
+# Einmaliger Umzug zu Nuki Direkt 0.1.1
 
-Ab 0.1.0 heißen Domain und Komponentenordner `nuki_direkt`, das HACS-Archiv
+Ab 0.1.1 heißen Domain und Komponentenordner `nuki_direkt`, das HACS-Archiv
 `nuki_direkt.zip`. Der Anzeigename bleibt **Nuki Direkt**. Die Umbenennung betrifft
 auch vorhandene Home-Assistant-Registrierungen; ein HACS-Download allein genügt
 nicht. Der bisherige technische Name `hass_nuki_bt` erscheint hier nur zur
@@ -13,6 +13,8 @@ keine Bluetooth- oder Motorbefehle.
 
 ## Voraussetzungen
 
+- HACS muss das Repository `gammarider/nuki-direkt` verwalten. Eine andere
+  HACS-Quelle für dieselben Schlösser darf nach dem Umzug nicht parallel aktiv bleiben.
 - Ein aktuelles, geschütztes Home-Assistant-Backup einschließlich `.storage`
   und des bisherigen Komponentenordners.
 - Zugriff auf das Konfigurationsverzeichnis und den Docker-Daemon von Home
@@ -32,8 +34,11 @@ keine Bluetooth- oder Motorbefehle.
    python3 migrate_nuki_direkt.py --config /config
    ```
 
-3. Nuki Direkt 0.1.0 in HACS herunterladen. Noch nicht neu starten und keine
-   neuen Geräte hinzufügen. Prüfen, dass der neue Komponentenordner vorhanden ist.
+3. `nuki_direkt.zip` aus dem Release herunterladen und nach
+   `/config/custom_components/nuki_direkt/` entpacken. Noch nicht neu starten
+   und keine neuen Geräte hinzufügen. Beim Domain-Wechsel kann die laufende
+   HACS-Instanz noch den alten Ordner erwarten; deshalb erfolgt dieser erste
+   Download direkt. Anschließende Updates übernimmt wieder HACS.
 4. **Home Assistant Core vollständig stoppen**, bei HA OS über den Supervisor.
    Der SSH-Zugang muss danach weiterhin verfügbar sein. Kein Host-Neustart.
 5. Umzug ausführen:
@@ -44,12 +49,13 @@ keine Bluetooth- oder Motorbefehle.
 
    Das Werkzeug prüft über Docker, dass der Container `homeassistant` gestoppt
    ist. Bei anderem Containernamen `--core-container NAME` angeben. Es sichert
-   die drei Registries unter `/config/nuki_direkt_backups/`, ändert ausschließlich
-   deren Integrationszuordnung und verschiebt den alten Komponentenordner in
+   die drei Registries und vorhandene HACS-Repository-Speicher unter
+   `/config/nuki_direkt_backups/`, ändert ausschließlich die Integrationszuordnung
+   und die HACS-Metadaten dieses Repositorys und verschiebt den alten Komponentenordner in
    die Sicherung. Die Dateien enthalten vertrauliche Kopplungsdaten und dürfen
    nicht veröffentlicht werden. Bei Fehlern Core gestoppt lassen und Ursache
    sowie Sicherung prüfen.
-6. Core starten. HACS-Version, geladene Geräte, unveränderte Entity-IDs,
+6. Core starten und die Repository-Informationen in HACS neu laden. HACS-Version, geladene Geräte, unveränderte Entity-IDs,
    Schlossstatus und eigene Automationen kontrollieren. Den alten Komponentenordner
    nicht wieder parallel installieren.
 
