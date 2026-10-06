@@ -5,7 +5,7 @@
         "step": {
             "step1": {
                 "title": "New Nuki device",
-                "description": "Please select",
+                "description": "Check the lock name and Bluetooth address. App is the default; Bridge can replace an existing bridge authorization. The optional security PIN is the administration PIN from the Nuki app, not a keypad code.",
                 "data": {
                     "name": "Device Name",
                     "device_address": "Device Address",
@@ -26,18 +26,53 @@
                 }
             },
             "choose_method": {
-                "description": "Choose a method to configure {name} ({address}).\nIt is recomended to pair the device automatically.\nSelect the manual option only if you know what you are doing\n\nBefore clicking on \"Pair\" put your Nuki in pairing mode by pressing the button on your Nuki for 5 seconds until the light is parmanently glowing.",
+                "description": "How would you like to connect {name} ({address})? Choose pairing for a new device. Manual import is only for existing pairing credentials.",
                 "menu_options": {
-                    "pair": "Pair device automatically (recomended)",
-                    "manual": "Enter already-paird information manually"
+                    "pair": "Pair device (recommended)",
+                    "manual": "Import existing pairing credentials"
                 }
+            },
+            "pair": {
+                "title": "Pair lock",
+                "description": "Put the lock in pairing mode following its instructions and keep your Bluetooth adapter or proxy within range. Continue starts one pairing attempt. Ultra requires the security PIN. A late cancellation can leave an authorization on the lock; do not repeatedly pair again.",
+                "data": {
+                    "pin": "Security PIN"
+                }
+            },
+            "recover": {
+                "title": "Verify connection",
+                "description": "The lock may already have saved this pairing. Continue only checks the existing authorization by reading its state. This does not pair again or move the lock. If verification keeps failing, inspect the newly created HomeAssistant authorization in the Nuki app; do not remove other devices' existing permissions."
             }
         },
         "error": {
             "auth": "Username/Password is wrong.",
-            "connection": "Unable to connect to the server.",
-            "unknown": "Unknown error occurred.",
-            "pairing": "Nuki is not in pairing mode.\nPut Nuki in pairing mode by pressing the button 5 seconds, Then try again"
+            "connection": "Bluetooth connection interrupted. Check proximity and the Bluetooth proxy.",
+            "unknown": "Setup could not finish. Please check the connection.",
+            "pairing": "The lock is not in pairing mode. Activate it again, then continue.",
+            "invalid_address": "Enter a valid Bluetooth address.",
+            "required": "Enter a name.",
+            "invalid_client_type": "Select App or Bridge.",
+            "invalid_pin": "Enter the correct numeric administration PIN from the Nuki app (0–65535).",
+            "pin_required": "This lock requires the security PIN from the Nuki app.",
+            "not_found": "No reachable Bluetooth adapter or proxy can find the lock. Check proximity, power and Bluetooth.",
+            "pairing_failed": "The lock rejected pairing. Check settings and available authorizations in the Nuki app.",
+            "pin_locked": "Too many PIN attempts. Check the Nuki app and wait for the lockout to end.",
+            "authorization_full": "The lock cannot store another authorization. Check the Nuki app.",
+            "timeout": "The lock did not respond in time. Check Bluetooth range and pairing mode.",
+            "invalid_key": "Invalid hexadecimal format or key length.",
+            "invalid_app_id": "Enter an app ID between 0 and 4294967295.",
+            "key_mismatch": "Public and private keys do not match."
+        },
+        "progress": {
+            "pair": "Connecting and pairing. This may take up to about 90 seconds.",
+            "verify": "Checking the existing authorization without moving the lock."
+        },
+        "abort": {
+            "already_configured": "This lock is already configured.",
+            "already_in_progress": "Setup for this lock is already in progress.",
+            "pairing_cancelled": "Pairing cancelled. After a late cancellation, check the newly created authorization in the Nuki app.",
+            "cleanup_failed": "The Bluetooth connection could not be released. Check the proxy before starting setup again.",
+            "pairing_uncertain": "The lock may have created an authorization whose confirmation was lost. Check the new HomeAssistant authorization in the Nuki app before starting another pairing attempt. Do not delete other devices' existing permissions."
         }
     },
     "options": {

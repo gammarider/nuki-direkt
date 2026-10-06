@@ -30,6 +30,29 @@ Bei der Erstkopplung kann der Client-Typ **Bridge** eine bestehende Nuki-Bridge-
 Registrierung ersetzen. **App** erlaubt den parallelen Betrieb; mehrere Clients
 können sich beim Empfang von Aktualisierungen beeinflussen.
 
+## Geführte Kopplung ab 0.0.25
+
+Der Assistent prüft Adresse und PIN und verhindert doppelte Einträge. **App** ist
+voreingestellt. Erst nach deiner Bestätigung beginnt ein einzelner Koppelversuch
+mit Fortschrittsanzeige. Bluetooth-Aufbau, Kopplung und Aufräumen haben begrenzte
+Wartezeiten. Ein Ultra verlangt vor dem Koppeln die Administrations-PIN aus der
+Nuki-App; das ist nicht der Keypad-Code.
+
+Bei Verbindungsfehlern oder Abbruch wird die Bluetooth-Verbindung freigegeben.
+Autorisierungsnachrichten werden nicht automatisch wiederholt. Wenn das Schloss
+bereits eine Berechtigung angelegt haben könnte und die Zugangsdaten vorliegen,
+bietet der Assistent eine reine Statusprüfung dieser Berechtigung an. Dabei wird
+das Schloss nicht bewegt und nicht erneut gekoppelt. Fehlen die nötigen Daten,
+bricht der Assistent mit einem Hinweis zur Prüfung in der Nuki-App ab. Nach
+Schließen des Assistenten oder HA-Neustart stehen unbestätigte Zugangsdaten nicht
+mehr für diese Wiederaufnahme bereit. Bestehende Berechtigungen anderer Geräte
+nicht löschen.
+
+Der manuelle Import prüft Schlüssel, Schlüsselpaar und App-ID auf gültiges Format;
+er führt keine Bluetooth-Verbindungsprüfung aus. Die neuen Abläufe sind mit
+Home Assistants Flow-Manager und simulierten Transportfehlern getestet. Eine
+neue physische Erstkopplung ist noch separat zu erproben.
+
 ## Bereits mit Nuki BT verbunden?
 
 **Bestehende Schlösser nicht löschen oder erneut koppeln.** Nuki Direkt verwendet
@@ -45,7 +68,7 @@ Das eigene Repository hieß bisher `gammarider/hass_nuki_bt`, davor
 2. HACS aktualisieren und prüfen, ob das bestehende Repository bereits auf
    `gammarider/nuki-direkt` zeigt. Falls es noch den alten Namen zeigt, zunächst
    den Repository-Link prüfen und die HACS-Informationen neu laden.
-3. Version **0.0.24** installieren und Home Assistant neu starten.
+3. Die aktuelle Version installieren und Home Assistant neu starten.
 4. Schlossstatus, vorhandene Entitäten und Automationen prüfen.
 
 Nur **eine** HACS-Quelle darf `custom_components/hass_nuki_bt` verwalten. Keine
@@ -91,7 +114,8 @@ python -m pip install -r requirements-test.txt
 python -m unittest discover -s tests -v
 ```
 
-Die Tests simulieren Bluetooth-Antworten und betätigen keine echten Schlösser.
+Die Tests verwenden auch Home Assistants echten Flow-Manager, simulieren die
+Bluetooth-Antworten und betätigen keine echten Schlösser.
 Die Release-Prüfungen umfassen Tests, Ruff, Hassfest und HACS. Versionsnummer
 und Release-Tag müssen übereinstimmen. Das HACS-Archiv heißt aus
 Kompatibilitätsgründen weiterhin `hass_nuki_bt.zip`.
