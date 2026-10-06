@@ -1,5 +1,5 @@
 {
-    "title": "Nuki Lock",
+    "title": "Nuki Direkt",
     "config": {
         "flow_title": "{name} ({address})",
         "step": {
@@ -53,13 +53,13 @@
     },
     "services": {
         "update_nuki_time": {
-          "name": "Update Nuki time",
-          "description": "Update Nuki internal date and time.",
-          "fields": {
-            "time": {
-              "name": "New datetime",
-              "description": "Optional. The datetime to send to Nuki. If no time is given, current UTC time is used."
-              }
+            "name": "Update Nuki time",
+            "description": "Update Nuki internal date and time.",
+            "fields": {
+                "time": {
+                    "name": "New datetime",
+                    "description": "Optional. The datetime to send to Nuki. If no time is given, current UTC time is used."
+                }
             }
         }
     }

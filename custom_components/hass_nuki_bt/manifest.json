@@ -1,26 +1,26 @@
 {
   "domain": "hass_nuki_bt",
-  "name": "Nuki BT",
+  "name": "Nuki Direkt",
   "bluetooth": [
     {
       "local_name": "Nuki_*"
     }
   ],
   "codeowners": [
-    "@evgparen"
+    "@gammarider"
   ],
   "config_flow": true,
   "dependencies": [
     "bluetooth_adapters"
   ],
-  "documentation": "https://github.com/evgparen/hass_nuki_bt",
+  "documentation": "https://github.com/gammarider/nuki-direkt",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/evgparen/hass_nuki_bt/issues",
+  "issue_tracker": "https://github.com/gammarider/nuki-direkt/issues",
   "loggers": [
     "pyNukiBT"
   ],
   "requirements": [
     "pyNukiBT==0.0.20"
   ],
-  "version": "0.0.23"
+  "version": "0.0.24"
 }

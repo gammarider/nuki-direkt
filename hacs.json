@@ -1,5 +1,5 @@
 {
-    "name": "Nuki BT",
+    "name": "Nuki Direkt",
     "filename": "hass_nuki_bt.zip",
     "hide_default_branch": true,
     "homeassistant": "2026.9.0",
